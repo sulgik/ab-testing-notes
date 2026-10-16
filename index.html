@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>온라인 실험과 인과추론 — 대화로 배우는 노트</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+
+<h1>온라인 실험과 인과추론 — 대화로 배우는 노트</h1>
+<div class="sub">Kohavi·Tang·Xu 『Trustworthy Online Controlled Experiments』 전 범위 + 책 이후 주제 · 김설기 × Claude</div>
+
+<p>통계학 박사가 AI 회사의 실험·평가 직무 면접을 준비하며, Claude와 "먼저 묻고, 모르는 것만 배우는" 방식으로 정리한 학습 노트입니다. Kohavi·Tang·Xu의 <i>Trustworthy Online Controlled Experiments</i> (2020)가 다루는 주제 전체를 덮고, 책 이후에 중요해진 주제(순차 검정, 이질적 효과, 밴딧, LLM 시대의 실험)를 더했습니다.</p>
+<p>이 노트는 책의 요약이나 번역이 아닙니다. 책이 다루는 <b>개념</b>을 우리 순서와 우리 말로 다시 설명한 것이고, 통계학 배경이 있는 독자가 "이게 내가 아는 그 개념인가?"를 확인하며 읽도록 썼습니다. 예를 들어 CUPED는 ANCOVA로, carryover는 DAG의 뒷문 경로로 설명합니다.</p>
+
+<div class="key">각 회차는 같은 틀입니다. ① <b>진단 질문</b> — 독자가 먼저 답해 봅니다 · ② <b>설명</b> — 틀리거나 비는 부분만 · ③ <b>면접 영어</b> — 그대로 말할 수 있는 한두 문장 · ④ <b>확인 문제</b>와 정답. 모든 페이지는 A4로 인쇄되도록 만들었습니다.</div>
+
+<h2>목차</h2>
+<table class="lesson-list">
+  <tr><th>회</th><th>주제</th><th>Kohavi 장</th></tr>
+  <tr><td><a href="lessons/01-cuped-srm-bias-variance.html">01</a></td><td><a href="lessons/01-cuped-srm-bias-variance.html">CUPED, SRM, 편향 vs 분산, DAG로 보는 carryover</a></td><td>14, 18, 21</td></tr>
+  <tr><td><a href="lessons/02-why-experiment-twymans-law.html">02</a></td><td><a href="lessons/02-why-experiment-twymans-law.html">왜 실험하나, Twyman's Law, 성공률과 거짓 발견 비율</a></td><td>1, 3, 4</td></tr>
+  <tr><td>03</td><td>실험 실행과 분석의 기본</td><td>2, 17</td></tr>
+  <tr><td>04</td><td>지표 설계: OEC, 가드레일, 민감도</td><td>6, 7</td></tr>
+  <tr><td>05</td><td>검정력·MDE, 비율 지표와 delta method</td><td>17, 18</td></tr>
+  <tr><td>06</td><td>신뢰성 도구: A/A, 트리거 분석, 가드레일</td><td>19, 20, 21</td></tr>
+  <tr><td>07</td><td>순차 검정과 peeking</td><td>(책 밖)</td></tr>
+  <tr><td>08</td><td>무작위 단위, 간섭, switchback</td><td>14, 22</td></tr>
+  <tr><td>09</td><td>장기 효과, novelty, 대리 지표</td><td>23</td></tr>
+  <tr><td>10</td><td>이질적 효과와 세그먼트 분석의 함정</td><td>(책 밖)</td></tr>
+  <tr><td>11</td><td>플랫폼 구축: 계측, 램핑, 분석 확장</td><td>12, 13, 15, 16</td></tr>
+  <tr><td>12</td><td>속도, 메타분석, 윤리</td><td>5, 8, 9</td></tr>
+  <tr><td>13</td><td>보완 기법</td><td>10</td></tr>
+  <tr><td>14</td><td>관찰 인과 연구: DiD, SC, IV, RDD</td><td>11</td></tr>
+  <tr><td>15</td><td>밴딧 vs A/B, 적응형 실험의 추론</td><td>(책 밖)</td></tr>
+  <tr><td>16</td><td>LLM 시대의 실험: 오프라인 평가와 온라인 실험</td><td>(책 밖)</td></tr>
+</table>
+
+<h2>같이 읽으면 좋은 것</h2>
+<ul>
+  <li>Kohavi, Tang, Xu. <i>Trustworthy Online Controlled Experiments</i>. Cambridge University Press, 2020. (한국어판: 『A/B 테스트』, 에이콘, 2022)</li>
+  <li>Larsen et al. "Statistical Challenges in Online Controlled Experiments: A Review of A/B Testing Methodology." <i>The American Statistician</i> 78(2), 2024. <a href="https://arxiv.org/abs/2212.11366">arXiv:2212.11366</a></li>
+  <li>Roth, Sant'Anna, Bilinski, Poe. "What's Trending in Difference-in-Differences?" <i>Journal of Econometrics</i> 235(2), 2023. <a href="https://arxiv.org/abs/2201.01194">arXiv:2201.01194</a></li>
+  <li>Hernán &amp; Robins. <i>Causal Inference: What If</i>. (무료 공개)</li>
+</ul>
+
+<h2>저자와 방식</h2>
+<p>김설기 (Sulgi Kim) — 생물통계 박사. NAVER에서 밴딧 실험 시스템을 만들었고, <a href="https://pypi.org/project/orts/">Odds-Ratio Thompson Sampling (<code>orts</code>)</a>의 저자입니다.</p>
+<p>노트는 Claude(Anthropic)와의 대화에서 나왔습니다. 질문과 방향, 틀린 답과 꼬리 질문은 저자의 것이고, 설명 초안은 Claude가 썼으며, 저자가 검토했습니다. 논문 서지 정보 중 확인하지 못한 것은 본문에 표시했습니다. 오류를 발견하면 GitHub 이슈로 알려 주세요.</p>
+
+<h2>라이선스</h2>
+<p>본문은 <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>입니다. 출처(저자와 이 저장소)를 밝히면 자유롭게 쓸 수 있습니다.</p>
+
+</main>
+</body>
+</html>
