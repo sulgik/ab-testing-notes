@@ -2,22 +2,20 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>01 · CUPED에서 인과 프레임워크까지</title>
+<title>01 · 실험 전 정보: 분산 감소에서 편향까지</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <main>
 <nav class="site"><a href="../index.html">← 목차</a></nav>
 
-<h1>01 · CUPED에서 인과 프레임워크까지</h1>
-<div class="sub">Kohavi 14·18·21장에 해당 · 2026-10-16</div>
+<h1>01 · 실험 전 정보: 분산 감소에서 편향까지</h1>
+<div class="sub">Kohavi 14·18장에 해당 · 2026-10-16 · CUPED → 버킷과 carryover → 편향 vs 분산 → DAG</div>
 
 <ol class="toc">
   <li>CUPED의 직관</li>
   <li>Paired t-test, change score, ANCOVA와의 관계</li>
   <li>신규 사용자에게는 왜 잘 안 통하나</li>
-  <li>SRM: 할당 비율 불일치</li>
-  <li>밴딧(MAB)에서 실험 전 정보 쓰기</li>
   <li>버킷 단위 분석과 carryover</li>
   <li>편향과 분산을 함께 다루는 방법</li>
   <li>인과 프레임워크: DAG와 잠재결과</li>
@@ -91,37 +89,8 @@
 </ul>
 <div class="en">New users have no pre-period history, so there's no baseline to subtract. I'd fall back on covariates known at signup, like acquisition channel, device, and country, or use their model-based prediction as in CUPAC. The variance reduction is usually smaller, though.</div>
 
-<h2>4. SRM: 할당 비율 불일치</h2>
-<div class="key"><b>한 줄:</b> 설계한 할당 비율과 실제 관측 비율이 통계적으로 다르면 결과를 믿으면 안 된다. 성가신 문제가 아니라 <b>데이터 품질 실패</b>다.</div>
-<ul>
-  <li><b>검정:</b> 카이제곱 적합도 검정. 플랫폼은 보통 p &lt; 0.001에서 경고 (실험이 많아 거짓 경보를 줄이려고).</li>
-  <li><b>왜 심각한가:</b> 한쪽 군에서 사용자가 빠졌다는 신호. 빠진 이유가 처치와 관련 있으면 결과가 편향된다.</li>
-  <li><b>흔한 원인:</b> 할당 버그, 처치가 로딩을 늦춰 기록 전 이탈, 봇 필터링 차이, 한쪽 로그 유실, 처치의 영향을 받는 트리거 조건.</li>
-  <li><b>대응:</b> 해석 중단 → 날짜·플랫폼·세그먼트별로 비율을 나눠 원인 위치 찾기 → 수정 후 재실행.</li>
-  <li><b>내 경험과 연결:</b> OR-TS(Odds-Ratio Thompson Sampling) 논문은 "할당 과정의 편향" 문제였다. 결과보다 데이터를 먼저 의심하는 습관의 근거.</li>
-</ul>
-<div class="en">A sample ratio mismatch means the observed split differs from the designed split more than chance allows. I treat it as a data-quality failure, not a nuisance: I'd stop interpreting, slice the ratio by day, platform, and segment to localize the cause, fix it, and rerun.</div>
-
-<h2>5. 밴딧(MAB)에서 실험 전 정보 쓰기</h2>
-<p>목적에 따라 두 갈래. <b>둘은 다른 질문에 답한다.</b></p>
-<table>
-  <tr><th></th><th>갈래 1: 잡음 줄이기 (CUPED의 밴딧 버전)</th><th>갈래 2: 개인화 (contextual bandit)</th></tr>
-  <tr><td>질문</td><td>어느 arm이 전체적으로 좋은가를 더 빨리</td><td>이 사람에게 어느 arm이 좋은가</td></tr>
-  <tr><td>방법</td><td>보상을 평소 수준으로 조정해 업데이트. 이진 보상이면 <span class="f">logit(p) = 기저 + β·평소CTR + arm효과</span>, arm 효과의 사후분포에서 Thompson sampling</td><td>arm × 특성 상호작용 모델. LinUCB, linear/logistic TS</td></tr>
-  <tr><td>효과</td><td>사후분포가 빨리 좁아짐 → regret 감소</td><td>이질성이 클 때 더 높은 보상</td></tr>
-  <tr><td>주의</td><td>X는 처치 전 값, 할당이 X에 의존하지 않을 것</td><td>할당이 X에 의존 → 단순 빼기 불가, 모델 안에서 추정. 파라미터 많아 학습이 느림</td></tr>
-</table>
-<h3>OR-TS와의 연결</h3>
-<table>
-  <tr><th></th><th>제거하는 기저 변동</th><th>단위</th></tr>
-  <tr><td>OR-TS</td><td>배치(시간)별 기저 CTR 변화</td><td>배치</td></tr>
-  <tr><td>CUPED식 조정</td><td>사람별 평소 활동 수준</td><td>사용자</td></tr>
-</table>
-<p>둘을 합치면 <span class="f">logit(p) = 배치 효과 + β·사용자 평소 수준 + arm 효과</span>. 시간과 사람 양쪽의 기저 잡음을 함께 제거하는 밴딧 → <b>OR-TS 확장 후보</b> (아이디어 단계, 검증 필요). "기존 연구를 어떻게 발전시키겠나?"에 대한 답이 될 수 있다.</p>
-<p class="note">밴딧은 배정이 적응적이라, 끝난 뒤 효과 크기의 신뢰구간을 그냥 계산하면 편향된다. 밴딧은 "결정을 빨리 내리는 도구"이지 "효과를 정확히 추정하는 도구"가 아니다.</p>
-<div class="en">There are two different uses: as a covariate to reduce reward variance so the bandit learns faster, which is CUPED for bandits, or as context to personalize the arm, which is a contextual bandit. They answer different questions.</div>
-
-<h2>6. 버킷 단위 분석과 carryover</h2>
+<h2>4. 버킷 단위 분석과 carryover</h2>
+<p class="note">실험 전 정보가 분산만 줄이는 게 아니라 <b>편향</b>을 만드는 순간이 있다. 그 경계가 버킷 재사용이다. (SRM과 밴딧 이야기는 각각 06회·15회로 옮김)</p>
 <ul>
   <li>많은 플랫폼은 사용자 ID를 해시해 예컨대 1,000개 버킷에 나누고, 버킷 묶음을 arm에 배정한다. 무작위의 실체는 여전히 사용자, 버킷은 운영 장치.</li>
   <li>분석은 <b>사용자 단위</b>(가장 흔함) 또는 <b>버킷 단위</b>(버킷 평균을 관측치로; 비율 지표나 사용자 내 상관이 복잡할 때 분산을 안정적으로 추정).</li>
@@ -136,7 +105,7 @@
 <p>같은 버킷을 연달아 쓰면 이전 실험의 효과가 버킷에 남는다. 새 실험 시작 시점에 이미 버킷 간 차이가 있어 결과가 오염된다. 대응: ① 실험마다 해시 시드를 바꿔 다시 섞기 (근본 해결) ② 버킷의 실험 전 값으로 CUPED → 남은 차이를 부분 보정 ③ 실험 전 기간 A/A 비교로 이미 차이가 있는지 확인.</p>
 <div class="en">CUPED applies at the unit of analysis. If you analyze at the bucket level, the covariate is the bucket's pre-period mean. It's still unbiased, but user-level adjustment is usually more efficient, and bucket reuse raises a carryover risk that you should handle by reshuffling the hash.</div>
 
-<h2>7. 편향과 분산을 함께 다루는 방법</h2>
+<h2>5. 편향과 분산을 함께 다루는 방법</h2>
 <div class="key"><b>구분:</b> carryover는 과거 노출이 새 배정과 얽혀 생기는 <b>편향</b>, CUPED가 다루는 것은 우연한 불균형으로 인한 <b>분산</b>.</div>
 <h3>① 설계: 편향을 분산으로 바꾼다</h3>
 <p>실험마다 버킷을 다시 섞으면 과거 노출 이력이 새 배정과 <b>독립</b>이 된다. carryover는 양쪽 군에 고르게 퍼진 잡음이 되고, 그 잡음은 실험 전 행동에 반영돼 있으니 CUPED가 흡수한다. <b>re-randomization + CUPED</b>. Google의 겹치는 실험 레이어처럼 실험마다 독립 해시를 쓰는 설계가 이 원리.</p>
@@ -153,7 +122,7 @@
 <p class="note">한계: 과거 노출의 효과가 새 처치와 <b>상호작용</b>하면 깔끔하게 분리되지 않는다. 상호작용을 따로 모델링하거나, 노출 이력이 없는 사용자만 쓴다.</p>
 <div class="en">Carryover is a bias problem and CUPED addresses variance, but re-randomizing each experiment turns carryover into noise that's independent of assignment, and then CUPED absorbs it. If you can't reshuffle, model the exposure history explicitly, the way crossover trials model carryover.</div>
 
-<h2>8. 인과 프레임워크: DAG와 잠재결과</h2>
+<h2>6. 인과 프레임워크: DAG와 잠재결과</h2>
 <h3>DAG: 같은 변수가 교란변수도, 정밀도 변수도 된다</h3>
 <figure>
 <svg viewBox="0 0 520 170" width="430" xmlns="http://www.w3.org/2000/svg" font-family="Apple SD Gothic Neo, sans-serif" font-size="13">
@@ -189,15 +158,13 @@
 <p class="note">논문 서지 정보는 기억에 기반한 것이므로 인용 전에 확인할 것.</p>
 <div class="en">In DAG terms, the pre-period covariate is a precision variable, so adjusting for it reduces variance without bias. Bucket reuse adds an edge from past to current assignment, which opens a backdoor through prior exposure and makes it a confounder. Re-randomization cuts that edge. More generally, you index potential outcomes by treatment history, as in Robins' g-methods or Bojinov and Shephard's time-series experiments.</div>
 
-<h2 class="pb">9. 한 장 요약과 확인 문제</h2>
+<h2 class="pb">7. 한 장 요약과 확인 문제</h2>
 <table>
   <tr><th>개념</th><th>한 줄</th></tr>
   <tr><td>CUPED</td><td>실험 전 값으로 하는 ANCOVA. 분산 × (1 − ρ²), 편향 없음</td></tr>
   <tr><td>세 방법</td><td>Post-only θ=0, change score θ=1, ANCOVA θ=회귀 기울기 (항상 최선)</td></tr>
   <tr><td>Paired t-test</td><td>대조군 없는 전후 비교. 시간 효과와 섞임</td></tr>
   <tr><td>신규 사용자</td><td>X 없음 → 가입 시점 특성, CUPAC, 층화 배정</td></tr>
-  <tr><td>SRM</td><td>카이제곱 검정, 데이터 품질 실패로 취급, 세그먼트로 원인 찾기</td></tr>
-  <tr><td>밴딧</td><td>공변량 = 빨리 배우기 / 맥락 = 개인화. OR-TS + 사용자 기저 = v2 후보</td></tr>
   <tr><td>버킷</td><td>CUPED는 분석 단위에서. 재사용 시 carryover</td></tr>
   <tr><td>편향 vs 분산</td><td>re-randomization이 편향을 분산으로 바꾸고 CUPED가 흡수</td></tr>
   <tr><td>DAG</td><td>현재 배정과 연결 = 교란변수, 끊기면 = 정밀도 변수</td></tr>
@@ -206,16 +173,14 @@
 
 <h3>확인 문제 (손으로 풀어 보기)</h3>
 <div class="q"><b>Q1.</b> 실험 전후 상관이 0.7이면 CUPED로 분산이 몇 % 줄어드나? 표본 크기로 치면 몇 배 효과인가?<div class="blank"></div></div>
-<div class="q"><b>Q2.</b> 50/50 실험에서 대조군 501,500명, 처치군 498,500명. SRM인가? (기준 0.001과 0.01 각각)<div class="blank"></div><div class="blank"></div></div>
-<div class="q"><b>Q3.</b> 영어 두 문장으로: CUPED는 왜 효과 추정을 편향시키지 않나?<div class="blank"></div><div class="blank"></div></div>
-<div class="q"><b>Q4.</b> 전후 상관이 0.4인 지표에서 change score를 쓰면 어떻게 되나? 왜?<div class="blank"></div></div>
-<div class="q"><b>Q5.</b> 버킷을 재사용하는 플랫폼에서 새 실험의 실험 전 A/A 비교가 유의하게 나왔다. 무엇을 의심하고 어떻게 하겠나?<div class="blank"></div><div class="blank"></div></div>
-<div class="q"><b>Q6.</b> DAG로 설명하라: 같은 과거 노출 변수가 언제 교란변수이고 언제 정밀도 변수인가?<div class="blank"></div><div class="blank"></div></div>
+<div class="q"><b>Q2.</b> 영어 두 문장으로: CUPED는 왜 효과 추정을 편향시키지 않나?<div class="blank"></div><div class="blank"></div></div>
+<div class="q"><b>Q3.</b> 전후 상관이 0.4인 지표에서 change score를 쓰면 어떻게 되나? 왜?<div class="blank"></div></div>
+<div class="q"><b>Q4.</b> 버킷을 재사용하는 플랫폼에서 새 실험의 실험 전 A/A 비교가 유의하게 나왔다. 무엇을 의심하고 어떻게 하겠나?<div class="blank"></div><div class="blank"></div></div>
+<div class="q"><b>Q5.</b> DAG로 설명하라: 같은 과거 노출 변수가 언제 교란변수이고 언제 정밀도 변수인가?<div class="blank"></div><div class="blank"></div></div>
 
 <h3>정답</h3>
 <ol class="note">
   <li>1 − 0.49 = 0.51 → 약 49% 감소, 표본 약 2배 효과.</li>
-  <li>χ² = 2 × 1500² / 500,000 = 9, 자유도 1, p ≈ 0.0027. 0.001 기준이면 경고 없음, 0.01 기준이면 SRM. 좋은 답: "경계 사례. 백만 명 규모에서 0.3% 차이는 우연으로 보기 어렵다. 경고가 안 떠도 세그먼트별로 확인하겠다."</li>
   <li>예: "The covariate is measured before randomization, so its distribution is the same in both arms. Subtracting a function of it changes the variance of the estimator but not its expected value."</li>
   <li>분산이 2(1 − 0.4) = 1.2배로 오히려 커진다. 상관이 0.5보다 약하면 과거를 통째로 빼는 게 잡음을 더한다. ANCOVA(분산 0.84배)를 써야 한다.</li>
   <li>이전 실험의 carryover (또는 할당 버그). 버킷 배정 이력을 확인하고, 해시 시드를 바꿔 다시 섞은 뒤 재실행. 불가능하면 버킷의 실험 전 값으로 CUPED, 이전 처치 지시변수를 모델에 포함.</li>

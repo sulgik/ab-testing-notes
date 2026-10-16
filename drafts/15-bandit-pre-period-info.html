@@ -1,0 +1,20 @@
+<!-- 01회에서 옮긴 초안. 15회(밴딧 vs A/B)에 통합 예정 -->
+<h2>5. 밴딧(MAB)에서 실험 전 정보 쓰기</h2>
+<p>목적에 따라 두 갈래. <b>둘은 다른 질문에 답한다.</b></p>
+<table>
+  <tr><th></th><th>갈래 1: 잡음 줄이기 (CUPED의 밴딧 버전)</th><th>갈래 2: 개인화 (contextual bandit)</th></tr>
+  <tr><td>질문</td><td>어느 arm이 전체적으로 좋은가를 더 빨리</td><td>이 사람에게 어느 arm이 좋은가</td></tr>
+  <tr><td>방법</td><td>보상을 평소 수준으로 조정해 업데이트. 이진 보상이면 <span class="f">logit(p) = 기저 + β·평소CTR + arm효과</span>, arm 효과의 사후분포에서 Thompson sampling</td><td>arm × 특성 상호작용 모델. LinUCB, linear/logistic TS</td></tr>
+  <tr><td>효과</td><td>사후분포가 빨리 좁아짐 → regret 감소</td><td>이질성이 클 때 더 높은 보상</td></tr>
+  <tr><td>주의</td><td>X는 처치 전 값, 할당이 X에 의존하지 않을 것</td><td>할당이 X에 의존 → 단순 빼기 불가, 모델 안에서 추정. 파라미터 많아 학습이 느림</td></tr>
+</table>
+<h3>OR-TS와의 연결</h3>
+<table>
+  <tr><th></th><th>제거하는 기저 변동</th><th>단위</th></tr>
+  <tr><td>OR-TS</td><td>배치(시간)별 기저 CTR 변화</td><td>배치</td></tr>
+  <tr><td>CUPED식 조정</td><td>사람별 평소 활동 수준</td><td>사용자</td></tr>
+</table>
+<p>둘을 합치면 <span class="f">logit(p) = 배치 효과 + β·사용자 평소 수준 + arm 효과</span>. 시간과 사람 양쪽의 기저 잡음을 함께 제거하는 밴딧 → <b>OR-TS 확장 후보</b> (아이디어 단계, 검증 필요). "기존 연구를 어떻게 발전시키겠나?"에 대한 답이 될 수 있다.</p>
+<p class="note">밴딧은 배정이 적응적이라, 끝난 뒤 효과 크기의 신뢰구간을 그냥 계산하면 편향된다. 밴딧은 "결정을 빨리 내리는 도구"이지 "효과를 정확히 추정하는 도구"가 아니다.</p>
+<div class="en">There are two different uses: as a covariate to reduce reward variance so the bandit learns faster, which is CUPED for bandits, or as context to personalize the arm, which is a contextual bandit. They answer different questions.</div>
+
