@@ -44,7 +44,6 @@
   <li><b>편향이 없는 이유:</b> X는 무작위 배정 전에 측정 → 두 군의 X 분포가 같다 → 군 간 차이(효과)는 그대로, 흔들림만 줄어든다.</li>
   <li><b>핵심 조건:</b> X는 반드시 <b>실험 전</b> 값. 실험 중 값을 쓰면 처치의 영향을 받은 부분을 빼서 효과의 일부를 지운다.</li>
 </ul>
-<div class="en">CUPED is regression adjustment using pre-experiment data. It reduces variance by a factor of one minus rho squared, and it stays unbiased because the covariate is measured before treatment, so it is independent of assignment.</div>
 
 <h2>2. Paired t-test, change score, ANCOVA와의 관계</h2>
 <h3>Paired t-test와 다른 점</h3>
@@ -77,7 +76,6 @@
   <li>ANCOVA는 θ를 데이터로 최적화하므로 항상 셋 중 최선. ρ → 1이면 θ → 1이 되어 change score와 같아진다.</li>
   <li>CUPED는 θ를 먼저 구해 조정 지표의 평균을 비교하고, ANCOVA는 <span class="f">Y = α + τ·처치 + β·X</span>에서 τ를 읽는다. 표본이 크면 사실상 같다. <b>CUPED = 익숙한 ANCOVA의 새 이름</b>(Deng et al., 2013).</li>
 </ul>
-<div class="en">Post-only, change score, and ANCOVA are the same estimator with different thetas — zero, one, and the regression slope. CUPED is the ANCOVA choice, which minimizes variance.</div>
 
 <h2>3. 신규 사용자에게는 왜 잘 안 통하나</h2>
 <p>실험 전 기록이 없어서 X가 비어 있다. 빼 줄 "평소 수준"이 없다.</p>
@@ -87,7 +85,6 @@
   <li><b>대안 3:</b> 층화 무작위 배정 (기기·국가별로 균형 있게 배정).</li>
   <li>한계: 이런 정보는 과거 행동만큼 결과를 잘 예측하지 못해 분산 감소 폭이 작다.</li>
 </ul>
-<div class="en">New users have no pre-period history, so there's no baseline to subtract. I'd fall back on covariates known at signup, like acquisition channel, device, and country, or use their model-based prediction as in CUPAC. The variance reduction is usually smaller, though.</div>
 
 <h2>4. 버킷 단위 분석과 carryover</h2>
 <p class="note">실험 전 정보가 분산만 줄이는 게 아니라 <b>편향</b>을 만드는 순간이 있다. 그 경계가 버킷 재사용이다. (SRM과 밴딧 이야기는 각각 06회·15회로 옮김)</p>
@@ -103,7 +100,6 @@
 </table>
 <h3>Carryover</h3>
 <p>같은 버킷을 연달아 쓰면 이전 실험의 효과가 버킷에 남는다. 새 실험 시작 시점에 이미 버킷 간 차이가 있어 결과가 오염된다. 대응: ① 실험마다 해시 시드를 바꿔 다시 섞기 (근본 해결) ② 버킷의 실험 전 값으로 CUPED → 남은 차이를 부분 보정 ③ 실험 전 기간 A/A 비교로 이미 차이가 있는지 확인.</p>
-<div class="en">CUPED applies at the unit of analysis. If you analyze at the bucket level, the covariate is the bucket's pre-period mean. It's still unbiased, but user-level adjustment is usually more efficient, and bucket reuse raises a carryover risk that you should handle by reshuffling the hash.</div>
 
 <h2>5. 편향과 분산을 함께 다루는 방법</h2>
 <div class="key"><b>구분:</b> carryover는 과거 노출이 새 배정과 얽혀 생기는 <b>편향</b>, CUPED가 다루는 것은 우연한 불균형으로 인한 <b>분산</b>.</div>
@@ -120,7 +116,6 @@
 <h3>③ 배정 시점: rerandomization (Morgan &amp; Rubin, 2012)</h3>
 <p>배정 후 실험 전 지표의 균형을 확인하고, 불균형이면 다시 뽑는다. 우연한 불균형과 남은 carryover 차이를 둘 다 시작 전에 거른다. 분석할 때 이 제약을 반영해야 정확한 분산이 나온다.</p>
 <p class="note">한계: 과거 노출의 효과가 새 처치와 <b>상호작용</b>하면 깔끔하게 분리되지 않는다. 상호작용을 따로 모델링하거나, 노출 이력이 없는 사용자만 쓴다.</p>
-<div class="en">Carryover is a bias problem and CUPED addresses variance, but re-randomizing each experiment turns carryover into noise that's independent of assignment, and then CUPED absorbs it. If you can't reshuffle, model the exposure history explicitly, the way crossover trials model carryover.</div>
 
 <h2>6. 인과 프레임워크: DAG와 잠재결과</h2>
 <h3>DAG: 같은 변수가 교란변수도, 정밀도 변수도 된다</h3>
@@ -156,7 +151,6 @@
   <li><b>간섭 일반화:</b> Aronow &amp; Samii (2017)의 exposure mapping — 실제로 받은 노출을 배정 이력·네트워크의 함수로 정의. 시간에 걸친 carryover와 네트워크 효과를 같은 틀로.</li>
 </ul>
 <p class="note">논문 서지 정보는 기억에 기반한 것이므로 인용 전에 확인할 것.</p>
-<div class="en">In DAG terms, the pre-period covariate is a precision variable, so adjusting for it reduces variance without bias. Bucket reuse adds an edge from past to current assignment, which opens a backdoor through prior exposure and makes it a confounder. Re-randomization cuts that edge. More generally, you index potential outcomes by treatment history, as in Robins' g-methods or Bojinov and Shephard's time-series experiments.</div>
 
 <h2 class="pb">7. 한 장 요약과 확인 문제</h2>
 <table>
