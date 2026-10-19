@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>용어집 · Glossary</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<nav class="site"><a href="index.html">← 목차</a></nav>
+
+<h1>용어집 · Glossary</h1>
+<div class="sub">본문은 업계에서 쓰는 영어 용어를 그대로 쓴다. 한국어 대응어와 한 줄 설명.</div>
+
+<p>온라인 실험 분야의 용어는 영어로 통용되고, 한국어 번역은 책이나 팀마다 다르다. 이 노트는 본문에서 영어 용어를 그대로 쓰고, 여기서 한국어 대응어를 적어 둔다. 통계학 일반 용어(신뢰구간, 분산, p-값)는 한국어로 둔다.</p>
+
+<table>
+  <tr><th>English</th><th>한국어</th><th>한 줄</th></tr>
+  <tr><td><b>adaptive allocation</b></td><td>적응형 배정</td><td></td></tr>
+  <tr><td><b>allocation ratio</b></td><td>할당 비율</td><td></td></tr>
+  <tr><td><b>analysis unit</b></td><td>분석 단위</td><td>지표를 집계하는 단위. randomization unit 이상이어야 분산이 맞는다</td></tr>
+  <tr><td><b>backdoor path</b></td><td>뒷문 경로</td><td></td></tr>
+  <tr><td><b>base rate</b></td><td>기저율</td><td>사전 확률. 실험 성공률이 곧 base rate</td></tr>
+  <tr><td><b>batch effect</b></td><td>배치 효과</td><td></td></tr>
+  <tr><td><b>bootstrap</b></td><td>부트스트랩</td><td></td></tr>
+  <tr><td><b>capping</b></td><td>상한 절단</td><td>극단값을 상한으로 자르기</td></tr>
+  <tr><td><b>cluster randomization</b></td><td>클러스터 무작위</td><td>간섭이 일어나는 묶음 단위로 무작위</td></tr>
+  <tr><td><b>confounder</b></td><td>교란변수</td><td>처치와 결과 모두에 영향을 주는 변수</td></tr>
+  <tr><td><b>control group</b></td><td>대조군</td><td></td></tr>
+  <tr><td><b>counterfactual</b></td><td>반사실</td><td>처치가 없었다면의 결과</td></tr>
+  <tr><td><b>debug metric</b></td><td>진단 지표</td><td></td></tr>
+  <tr><td><b>difference-in-differences</b></td><td>이중차분</td><td>DiD</td></tr>
+  <tr><td><b>dogfooding</b></td><td>도그푸딩</td><td></td></tr>
+  <tr><td><b>driver metric</b></td><td>동인 지표</td><td>목표의 선행 지표. 보통 실험의 1차 지표</td></tr>
+  <tr><td><b>effect size</b></td><td>효과 크기</td><td></td></tr>
+  <tr><td><b>exploration and exploitation</b></td><td>탐색과 활용</td><td></td></tr>
+  <tr><td><b>false discovery rate</b></td><td>거짓 발견 비율</td><td>FDR. 유의한 결과 중 가짜의 비율</td></tr>
+  <tr><td><b>false positive</b></td><td>거짓 양성</td><td></td></tr>
+  <tr><td><b>false positive rate</b></td><td>거짓 양성률</td><td>효과 없는 것 중 유의하게 나온 비율 (α)</td></tr>
+  <tr><td><b>goal metric</b></td><td>목표 지표</td><td></td></tr>
+  <tr><td><b>guardrail</b></td><td>가드레일</td><td></td></tr>
+  <tr><td><b>guardrail metric</b></td><td>가드레일 지표</td><td>나빠지면 안 되는 지표. 출시를 막는 조건</td></tr>
+  <tr><td><b>heterogeneous effect</b></td><td>이질적 효과</td><td></td></tr>
+  <tr><td><b>heterogeneous treatment effect</b></td><td>이질적 처치 효과</td><td>HTE. 집단·개인에 따라 다른 처치 효과</td></tr>
+  <tr><td><b>institutional memory</b></td><td>제도적 기억</td><td></td></tr>
+  <tr><td><b>instrumental variable</b></td><td>도구변수</td><td>IV</td></tr>
+  <tr><td><b>instrumentation</b></td><td>계측</td><td>배정·노출·결과 로그를 남기는 일</td></tr>
+  <tr><td><b>interaction test</b></td><td>상호작용 검정</td><td></td></tr>
+  <tr><td><b>interference</b></td><td>간섭</td><td>한 단위의 처치가 다른 단위의 결과에 영향</td></tr>
+  <tr><td><b>interrupted time series</b></td><td>중단 시계열</td><td></td></tr>
+  <tr><td><b>key metric</b></td><td>핵심 지표</td><td></td></tr>
+  <tr><td><b>LLM-as-a-judge</b></td><td>LLM 심사</td><td></td></tr>
+  <tr><td><b>long-term holdout</b></td><td>장기 holdout</td><td></td></tr>
+  <tr><td><b>meta-analysis</b></td><td>메타분석</td><td></td></tr>
+  <tr><td><b>multiple comparisons</b></td><td>다중 비교</td><td>여러 검정 중 하나는 우연히 유의</td></tr>
+  <tr><td><b>network effect</b></td><td>네트워크 효과</td><td></td></tr>
+  <tr><td><b>non-stationarity</b></td><td>비정상성</td><td></td></tr>
+  <tr><td><b>novelty effect</b></td><td>신기 효과</td><td>새것에 대한 호기심으로 초반에 과대</td></tr>
+  <tr><td><b>offline evaluation</b></td><td>오프라인 평가</td><td></td></tr>
+  <tr><td><b>outlier</b></td><td>이상치</td><td></td></tr>
+  <tr><td><b>overlapping layers</b></td><td>겹치는 레이어</td><td>독립 해시로 여러 실험을 동시에</td></tr>
+  <tr><td><b>paired comparison</b></td><td>쌍대 비교</td><td></td></tr>
+  <tr><td><b>parallel trends</b></td><td>평행 추세</td><td>DiD의 핵심 가정</td></tr>
+  <tr><td><b>post-stratification</b></td><td>사후층화</td><td></td></tr>
+  <tr><td><b>post-treatment variable</b></td><td>처치 후 변수</td><td></td></tr>
+  <tr><td><b>potential outcome</b></td><td>잠재결과</td><td></td></tr>
+  <tr><td><b>power</b></td><td>검정력</td><td></td></tr>
+  <tr><td><b>pre-experiment data</b></td><td>실험 전 데이터</td><td></td></tr>
+  <tr><td><b>pre-registration</b></td><td>사전 등록</td><td>가설·지표·표본·종료 기준을 시작 전에 고정</td></tr>
+  <tr><td><b>precision variable</b></td><td>정밀도 변수</td><td>결과에만 영향, 보정하면 분산만 준다</td></tr>
+  <tr><td><b>primacy effect</b></td><td>학습 효과</td><td>적응에 시간이 걸려 초반에 과소</td></tr>
+  <tr><td><b>ramping</b></td><td>램핑</td><td>노출 비율을 단계적으로 올리기</td></tr>
+  <tr><td><b>random assignment</b></td><td>무작위 배정</td><td>처치를 동전으로 정하는 것</td></tr>
+  <tr><td><b>randomization unit</b></td><td>무작위 단위</td><td>무작위 배정의 단위 (사용자·세션·페이지뷰·클러스터)</td></tr>
+  <tr><td><b>regression discontinuity</b></td><td>회귀 불연속</td><td>RDD. 임계값 근처 비교</td></tr>
+  <tr><td><b>replication</b></td><td>재현</td><td></td></tr>
+  <tr><td><b>sample ratio mismatch</b></td><td>할당 비율 불일치</td><td>SRM. 설계한 배정 비율과 관측 비율이 통계적으로 다른 상태</td></tr>
+  <tr><td><b>self-selection</b></td><td>자기선택</td><td>사용자가 스스로 처치를 고를 때 생기는 편향</td></tr>
+  <tr><td><b>sensitivity</b></td><td>민감도</td><td>지표가 변화를 잡아내는 정도</td></tr>
+  <tr><td><b>sequential testing</b></td><td>순차 검정</td><td>중간에 봐도 되도록 설계한 검정</td></tr>
+  <tr><td><b>shared resource</b></td><td>공유 자원</td><td></td></tr>
+  <tr><td><b>shrinkage</b></td><td>축소 추정</td><td>사전분포 쪽으로 추정치를 당기기</td></tr>
+  <tr><td><b>Simpson&#x27;s paradox</b></td><td>심슨의 역설</td><td></td></tr>
+  <tr><td><b>staggered adoption</b></td><td>시차 도입</td><td>집단마다 처치 시점이 다른 DiD</td></tr>
+  <tr><td><b>stratification</b></td><td>층화</td><td></td></tr>
+  <tr><td><b>surrogate index</b></td><td>대리 지수</td><td></td></tr>
+  <tr><td><b>surrogate metric</b></td><td>대리 지표</td><td>장기 결과 대신 쓰는 단기 지표</td></tr>
+  <tr><td><b>tail metric</b></td><td>꼬리 지표</td><td>최악 사례 비율</td></tr>
+  <tr><td><b>treatment effect</b></td><td>처치 효과</td><td></td></tr>
+  <tr><td><b>treatment group</b></td><td>처치군</td><td></td></tr>
+  <tr><td><b>trigger condition</b></td><td>트리거 조건</td><td></td></tr>
+  <tr><td><b>trigger rate</b></td><td>트리거율</td><td></td></tr>
+  <tr><td><b>triggered</b></td><td>트리거된</td><td></td></tr>
+  <tr><td><b>triggered analysis</b></td><td>트리거 분석</td><td>변화를 실제로 본 사용자만으로 하는 분석</td></tr>
+  <tr><td><b>variance reduction</b></td><td>분산 감소</td><td>CUPED, capping, 층화 등으로 잡음 줄이기</td></tr>
+  <tr><td><b>variant</b></td><td>변형</td><td></td></tr>
+  <tr><td><b>winner&#x27;s curse</b></td><td>승자의 저주</td><td>유의한 결과의 점 추정은 평균적으로 과대</td></tr>
+</table>
+
+</main>
+</body>
+</html>

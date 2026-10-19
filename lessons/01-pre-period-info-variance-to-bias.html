@@ -2,14 +2,14 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>01 · 실험 전 정보: 분산 감소에서 편향까지</title>
+<title>01 · 실험 전 정보: variance reduction에서 편향까지</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <main>
 <nav class="site"><a href="../index.html">← 목차</a></nav>
 
-<h1>01 · 실험 전 정보: 분산 감소에서 편향까지</h1>
+<h1>01 · 실험 전 정보: variance reduction에서 편향까지</h1>
 <div class="sub">Kohavi 14·18장에 해당 · 2026-10-16 · CUPED → 버킷과 carryover → 편향 vs 분산 → DAG</div>
 
 <ol class="toc">
@@ -18,7 +18,7 @@
   <li>신규 사용자에게는 왜 잘 안 통하나</li>
   <li>버킷 단위 분석과 carryover</li>
   <li>편향과 분산을 함께 다루는 방법</li>
-  <li>인과 프레임워크: DAG와 잠재결과</li>
+  <li>인과 프레임워크: DAG와 potential outcome</li>
   <li>한 장 요약과 확인 문제</li>
 </ol>
 
@@ -28,11 +28,11 @@
 <p>버튼 색을 바꾸면 클릭이 +5 늘어난다고 하자.</p>
 <table>
   <tr><th>사용자</th><th class="num">실험 전 (X)</th><th class="num">실험 중 (Y)</th><th class="num">평소 대비</th></tr>
-  <tr><td>헤비 유저 (대조군)</td><td class="num">100</td><td class="num">100</td><td class="num">0</td></tr>
-  <tr><td>라이트 유저 (처치군)</td><td class="num">10</td><td class="num">15</td><td class="num"><b>+5</b></td></tr>
+  <tr><td>헤비 유저 (control group)</td><td class="num">100</td><td class="num">100</td><td class="num">0</td></tr>
+  <tr><td>라이트 유저 (treatment group)</td><td class="num">10</td><td class="num">15</td><td class="num"><b>+5</b></td></tr>
 </table>
 <ul>
-  <li>Y만 비교하면 처치군이 85만큼 "나빠" 보인다. 무작위 배정이라 평균적으로는 상쇄되지만, 사람 간 차이가 <b>분산을 키워</b> 작은 효과를 묻어 버린다.</li>
+  <li>Y만 비교하면 treatment group이 85만큼 "나빠" 보인다. random assignment이라 평균적으로는 상쇄되지만, 사람 간 차이가 <b>분산을 키워</b> 작은 효과를 묻어 버린다.</li>
   <li>평소 대비로 보면 0 대 +5로 효과가 바로 보인다.</li>
 </ul>
 
@@ -41,7 +41,7 @@
 <ul>
   <li><b>분산:</b> <span class="f">Var(Y<sub>cuped</sub>) = Var(Y)(1 − ρ²)</span>. ρ = 0.7이면 분산이 약 절반 → 표본을 두 배 모은 효과. 실험 기간을 절반으로 줄일 수 있다.</li>
   <li><b>θ의 의미:</b> 과거가 현재를 얼마나 잘 예측하는지에 맞춰 "딱 필요한 만큼" 빼는 양. Y를 X로 회귀한 기울기.</li>
-  <li><b>편향이 없는 이유:</b> X는 무작위 배정 전에 측정 → 두 군의 X 분포가 같다 → 군 간 차이(효과)는 그대로, 흔들림만 줄어든다.</li>
+  <li><b>편향이 없는 이유:</b> X는 random assignment 전에 측정 → 두 군의 X 분포가 같다 → 군 간 차이(효과)는 그대로, 흔들림만 줄어든다.</li>
   <li><b>핵심 조건:</b> X는 반드시 <b>실험 전</b> 값. 실험 중 값을 쓰면 처치의 영향을 받은 부분을 빼서 효과의 일부를 지운다.</li>
 </ul>
 
@@ -49,12 +49,12 @@
 <h3>Paired t-test와 다른 점</h3>
 <table>
   <tr><th></th><th>Paired t-test</th><th>CUPED</th></tr>
-  <tr><td>비교 대상</td><td>같은 사람의 전 vs 후</td><td>처치군 vs 대조군 (다른 사람들)</td></tr>
-  <tr><td>대조군</td><td>없음</td><td>있음 (무작위 배정)</td></tr>
+  <tr><td>비교 대상</td><td>같은 사람의 전 vs 후</td><td>treatment group vs control group (다른 사람들)</td></tr>
+  <tr><td>control group</td><td>없음</td><td>있음 (random assignment)</td></tr>
   <tr><td>실험 전 값의 역할</td><td>비교 그 자체</td><td>잡음 줄이기 보조</td></tr>
-  <tr><td>약점</td><td>효과가 시간 흐름(계절, 추세)과 섞임</td><td>무작위 배정 덕분에 없음</td></tr>
+  <tr><td>약점</td><td>효과가 시간 흐름(계절, 추세)과 섞임</td><td>random assignment 덕분에 없음</td></tr>
 </table>
-<p class="note">예: 12월에 버튼을 바꾸고 paired t-test로 "전보다 늘었다"고 하면, 버튼 때문인지 연말 효과 때문인지 알 수 없다. CUPED는 같은 12월을 겪은 대조군과 비교한다.</p>
+<p class="note">예: 12월에 버튼을 바꾸고 paired t-test로 "전보다 늘었다"고 하면, 버튼 때문인지 연말 효과 때문인지 알 수 없다. CUPED는 같은 12월을 겪은 control group과 비교한다.</p>
 
 <h3>세 방법은 θ만 다른 같은 틀</h3>
 <div class="key">두 군 실험에서 실험 전 값 X가 있을 때, 세 방법 모두 <b>"Y − θX의 평균을 두 군 사이에서 비교"</b>한다.</div>
@@ -81,9 +81,9 @@
 <p>실험 전 기록이 없어서 X가 비어 있다. 빼 줄 "평소 수준"이 없다.</p>
 <ul>
   <li><b>대안 1:</b> 가입 시점에 알 수 있는 다른 정보 (가입 경로, 기기, 국가, 유입 채널). 처치 전에 정해진 값이라 편향 없음.</li>
-  <li><b>대안 2 — CUPAC:</b> 이런 특성으로 결과를 예측하는 모델을 실험 전 데이터로 학습하고, 예측값을 X로 사용.</li>
-  <li><b>대안 3:</b> 층화 무작위 배정 (기기·국가별로 균형 있게 배정).</li>
-  <li>한계: 이런 정보는 과거 행동만큼 결과를 잘 예측하지 못해 분산 감소 폭이 작다.</li>
+  <li><b>대안 2 — CUPAC:</b> 이런 특성으로 결과를 예측하는 모델을 pre-experiment data로 학습하고, 예측값을 X로 사용.</li>
+  <li><b>대안 3:</b> stratification random assignment (기기·국가별로 균형 있게 배정).</li>
+  <li>한계: 이런 정보는 과거 행동만큼 결과를 잘 예측하지 못해 variance reduction 폭이 작다.</li>
 </ul>
 
 <h2>4. 버킷 단위 분석과 carryover</h2>
@@ -92,9 +92,9 @@
   <li>많은 플랫폼은 사용자 ID를 해시해 예컨대 1,000개 버킷에 나누고, 버킷 묶음을 arm에 배정한다. 무작위의 실체는 여전히 사용자, 버킷은 운영 장치.</li>
   <li>분석은 <b>사용자 단위</b>(가장 흔함) 또는 <b>버킷 단위</b>(버킷 평균을 관측치로; 비율 지표나 사용자 내 상관이 복잡할 때 분산을 안정적으로 추정).</li>
 </ul>
-<div class="key"><b>CUPED는 분석 단위에서 적용한다.</b> 버킷 단위로 분석하면 X = 버킷의 실험 전 평균. 편향은 없지만, 보통 사용자 단위가 더 효율적이다 (더 세밀한 정보를 쓰므로).</div>
+<div class="key"><b>CUPED는 analysis unit에서 적용한다.</b> 버킷 단위로 분석하면 X = 버킷의 실험 전 평균. 편향은 없지만, 보통 사용자 단위가 더 효율적이다 (더 세밀한 정보를 쓰므로).</div>
 <table>
-  <tr><th>분석 단위</th><th>X</th><th>제거되는 잡음</th></tr>
+  <tr><th>analysis unit</th><th>X</th><th>제거되는 잡음</th></tr>
   <tr><td>사용자</td><td>그 사용자의 실험 전 지표</td><td>사용자 간 차이</td></tr>
   <tr><td>버킷</td><td>그 버킷의 실험 전 평균</td><td>버킷 간 차이 (어떤 사용자가 우연히 들어갔나)</td></tr>
 </table>
@@ -106,7 +106,7 @@
 <h3>① 설계: 편향을 분산으로 바꾼다</h3>
 <p>실험마다 버킷을 다시 섞으면 과거 노출 이력이 새 배정과 <b>독립</b>이 된다. carryover는 양쪽 군에 고르게 퍼진 잡음이 되고, 그 잡음은 실험 전 행동에 반영돼 있으니 CUPED가 흡수한다. <b>re-randomization + CUPED</b>. Google의 겹치는 실험 레이어처럼 실험마다 독립 해시를 쓰는 설계가 이 원리.</p>
 <h3>② 모델: 노출 이력을 명시적으로 (교차 설계와 같은 구조)</h3>
-<p><span class="f">Y = 현재 처치 효과 + 과거 처치 효과(carryover) + 기간 효과 + 개인 기저 수준 + 오차</span></p>
+<p><span class="f">Y = 현재 treatment effect + 과거 treatment effect(carryover) + 기간 효과 + 개인 기저 수준 + 오차</span></p>
 <ul>
   <li>개인 기저 수준 → CUPED의 역할 (분산)</li>
   <li>과거 처치 지시변수 → carryover 직접 추정·보정 (편향)</li>
@@ -117,8 +117,8 @@
 <p>배정 후 실험 전 지표의 균형을 확인하고, 불균형이면 다시 뽑는다. 우연한 불균형과 남은 carryover 차이를 둘 다 시작 전에 거른다. 분석할 때 이 제약을 반영해야 정확한 분산이 나온다.</p>
 <p class="note">한계: 과거 노출의 효과가 새 처치와 <b>상호작용</b>하면 깔끔하게 분리되지 않는다. 상호작용을 따로 모델링하거나, 노출 이력이 없는 사용자만 쓴다.</p>
 
-<h2>6. 인과 프레임워크: DAG와 잠재결과</h2>
-<h3>DAG: 같은 변수가 교란변수도, 정밀도 변수도 된다</h3>
+<h2>6. 인과 프레임워크: DAG와 potential outcome</h2>
+<h3>DAG: 같은 변수가 confounder도, precision variable도 된다</h3>
 <figure>
 <svg viewBox="0 0 520 170" width="430" xmlns="http://www.w3.org/2000/svg" font-family="Apple SD Gothic Neo, sans-serif" font-size="13">
   <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1b1f24"/></marker>
@@ -134,21 +134,21 @@
   <line x1="430" y1="58" x2="430" y2="108" stroke="#1b1f24" stroke-width="1.4" marker-end="url(#ar)"/>
   <text x="253" y="152" text-anchor="middle" font-size="11.5" fill="#5a6370">X는 Y의 원인 (CUPED가 보정)</text>
 </svg>
-<figcaption>빨간 점선이 있으면 A(t) ← A(t−1) → X → Y(t) 뒷문 경로가 열려 A(t−1)이 교란변수가 된다.</figcaption>
+<figcaption>빨간 점선이 있으면 A(t) ← A(t−1) → X → Y(t) backdoor path이 열려 A(t−1)이 confounder가 된다.</figcaption>
 </figure>
 <ul>
-  <li><b>CUPED:</b> X는 Y의 원인이지만 A(t)와 연결돼 있지 않다 → <b>정밀도 변수(precision variable)</b>. 보정하면 편향 없이 분산만 준다.</li>
-  <li><b>Carryover가 편향인 이유:</b> 버킷 재사용으로 A(t−1) → A(t)가 생기면 뒷문 경로가 열려 A(t−1)이 <b>교란변수</b>.</li>
-  <li><b>Re-randomization:</b> 그 화살표를 끊는다 → 다시 정밀도 변수 → CUPED가 흡수.</li>
+  <li><b>CUPED:</b> X는 Y의 원인이지만 A(t)와 연결돼 있지 않다 → <b>precision variable(precision variable)</b>. 보정하면 편향 없이 분산만 준다.</li>
+  <li><b>Carryover가 편향인 이유:</b> 버킷 재사용으로 A(t−1) → A(t)가 생기면 backdoor path이 열려 A(t−1)이 <b>confounder</b>.</li>
+  <li><b>Re-randomization:</b> 그 화살표를 끊는다 → 다시 precision variable → CUPED가 흡수.</li>
 </ul>
-<div class="key"><b>통합:</b> 같은 과거 정보라도 현재 배정과 연결되면 교란변수(편향), 연결이 끊기면 정밀도 변수(분산). "편향을 분산으로 바꾼다" = DAG에서 화살표 하나를 끊는 일.</div>
+<div class="key"><b>통합:</b> 같은 과거 정보라도 현재 배정과 연결되면 confounder(편향), 연결이 끊기면 precision variable(분산). "편향을 분산으로 바꾼다" = DAG에서 화살표 하나를 끊는 일.</div>
 
-<h3>잠재결과: 처치 "이력"을 인덱스로</h3>
+<h3>potential outcome: 처치 "이력"을 인덱스로</h3>
 <ul>
-  <li>잠재결과를 지금 처치만이 아니라 <b>처치 이력 전체</b>의 함수로 정의: <span class="f">Y(t)(a<sub>1</sub>, …, a<sub>t</sub>)</span>. SUTVA의 "과거 노출 영향 없음"을 푸는 것.</li>
+  <li>potential outcome을 지금 처치만이 아니라 <b>처치 이력 전체</b>의 함수로 정의: <span class="f">Y(t)(a<sub>1</sub>, …, a<sub>t</sub>)</span>. SUTVA의 "과거 노출 영향 없음"을 푸는 것.</li>
   <li><b>Robins의 g-methods:</b> 시간에 따라 바뀌는 처치의 고전적 틀. g-formula, 한계구조모형(MSM, 역확률가중), 구조적 중첩모형.</li>
-  <li><b>시계열 실험:</b> Bojinov &amp; Shephard (2019, JASA) — 잠재결과를 "경로" 단위로, m차 carryover 가정 하의 추정량과 정확 검정. Bojinov, Simchi-Levi &amp; Zhao (2023, Management Science) — switchback 실험의 최적 설계.</li>
-  <li><b>간섭 일반화:</b> Aronow &amp; Samii (2017)의 exposure mapping — 실제로 받은 노출을 배정 이력·네트워크의 함수로 정의. 시간에 걸친 carryover와 네트워크 효과를 같은 틀로.</li>
+  <li><b>시계열 실험:</b> Bojinov &amp; Shephard (2019, JASA) — potential outcome을 "경로" 단위로, m차 carryover 가정 하의 추정량과 정확 검정. Bojinov, Simchi-Levi &amp; Zhao (2023, Management Science) — switchback 실험의 최적 설계.</li>
+  <li><b>interference 일반화:</b> Aronow &amp; Samii (2017)의 exposure mapping — 실제로 받은 노출을 배정 이력·네트워크의 함수로 정의. 시간에 걸친 carryover와 network effect을 같은 틀로.</li>
 </ul>
 <p class="note">논문 서지 정보는 기억에 기반한 것이므로 인용 전에 확인할 것.</p>
 
@@ -157,12 +157,12 @@
   <tr><th>개념</th><th>한 줄</th></tr>
   <tr><td>CUPED</td><td>실험 전 값으로 하는 ANCOVA. 분산 × (1 − ρ²), 편향 없음</td></tr>
   <tr><td>세 방법</td><td>Post-only θ=0, change score θ=1, ANCOVA θ=회귀 기울기 (항상 최선)</td></tr>
-  <tr><td>Paired t-test</td><td>대조군 없는 전후 비교. 시간 효과와 섞임</td></tr>
-  <tr><td>신규 사용자</td><td>X 없음 → 가입 시점 특성, CUPAC, 층화 배정</td></tr>
-  <tr><td>버킷</td><td>CUPED는 분석 단위에서. 재사용 시 carryover</td></tr>
+  <tr><td>Paired t-test</td><td>control group 없는 전후 비교. 시간 효과와 섞임</td></tr>
+  <tr><td>신규 사용자</td><td>X 없음 → 가입 시점 특성, CUPAC, stratification 배정</td></tr>
+  <tr><td>버킷</td><td>CUPED는 analysis unit에서. 재사용 시 carryover</td></tr>
   <tr><td>편향 vs 분산</td><td>re-randomization이 편향을 분산으로 바꾸고 CUPED가 흡수</td></tr>
-  <tr><td>DAG</td><td>현재 배정과 연결 = 교란변수, 끊기면 = 정밀도 변수</td></tr>
-  <tr><td>잠재결과</td><td>처치 이력으로 인덱싱: g-methods, 시계열 실험, exposure mapping</td></tr>
+  <tr><td>DAG</td><td>현재 배정과 연결 = confounder, 끊기면 = precision variable</td></tr>
+  <tr><td>potential outcome</td><td>처치 이력으로 인덱싱: g-methods, 시계열 실험, exposure mapping</td></tr>
 </table>
 
 <h3>확인 문제 (손으로 풀어 보기)</h3>
@@ -170,7 +170,7 @@
 <div class="q"><b>Q2.</b> 영어 두 문장으로: CUPED는 왜 효과 추정을 편향시키지 않나?<div class="blank"></div><div class="blank"></div></div>
 <div class="q"><b>Q3.</b> 전후 상관이 0.4인 지표에서 change score를 쓰면 어떻게 되나? 왜?<div class="blank"></div></div>
 <div class="q"><b>Q4.</b> 버킷을 재사용하는 플랫폼에서 새 실험의 실험 전 A/A 비교가 유의하게 나왔다. 무엇을 의심하고 어떻게 하겠나?<div class="blank"></div><div class="blank"></div></div>
-<div class="q"><b>Q5.</b> DAG로 설명하라: 같은 과거 노출 변수가 언제 교란변수이고 언제 정밀도 변수인가?<div class="blank"></div><div class="blank"></div></div>
+<div class="q"><b>Q5.</b> DAG로 설명하라: 같은 과거 노출 변수가 언제 confounder고 언제 precision variable인가?<div class="blank"></div><div class="blank"></div></div>
 
 <h3>정답</h3>
 <ol class="note">
@@ -178,7 +178,7 @@
   <li>예: "The covariate is measured before randomization, so its distribution is the same in both arms. Subtracting a function of it changes the variance of the estimator but not its expected value."</li>
   <li>분산이 2(1 − 0.4) = 1.2배로 오히려 커진다. 상관이 0.5보다 약하면 과거를 통째로 빼는 게 잡음을 더한다. ANCOVA(분산 0.84배)를 써야 한다.</li>
   <li>이전 실험의 carryover (또는 할당 버그). 버킷 배정 이력을 확인하고, 해시 시드를 바꿔 다시 섞은 뒤 재실행. 불가능하면 버킷의 실험 전 값으로 CUPED, 이전 처치 지시변수를 모델에 포함.</li>
-  <li>현재 배정과 연결되는 경로(예: 버킷 재사용으로 A(t−1) → A(t))가 있으면 뒷문이 열려 교란변수. 무작위 재배정으로 그 경로가 끊기면 결과에만 영향을 주는 정밀도 변수.</li>
+  <li>현재 배정과 연결되는 경로(예: 버킷 재사용으로 A(t−1) → A(t))가 있으면 뒷문이 열려 confounder. 무작위 재배정으로 그 경로가 끊기면 결과에만 영향을 주는 precision variable.</li>
 </ol>
 
 </main>
